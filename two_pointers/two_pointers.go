@@ -1,6 +1,10 @@
 package two_pointers
 
-import "sort"
+import (
+	"sort"
+
+	"github.com/adyanf/coding-patterns-dsa/structs"
+)
 
 // Two pointers is a versatile technique used in problem-solving to efficiently traverse or manipulate
 // sequential data structures, such as arrays or linked lists.
@@ -31,4 +35,26 @@ func FindSumOfThree(nums []int, target int) bool {
 		}
 	}
 	return false
+}
+
+func RemoveNthLastNode(head *structs.LinkedListNode, n int) *structs.LinkedListNode {
+	left := head
+	right := head
+
+	for i := 0; i < n; i++ {
+		right = right.Next
+	}
+
+	if right == nil {
+		return head.Next
+	}
+
+	for right.Next != nil {
+		right = right.Next
+		left = left.Next
+	}
+
+	left.Next = left.Next.Next
+
+	return head
 }
