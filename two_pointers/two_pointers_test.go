@@ -5,6 +5,7 @@ import (
 
 	"github.com/adyanf/coding-patterns-dsa/structs"
 	"github.com/adyanf/coding-patterns-dsa/two_pointers"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFindSumOfThree(t *testing.T) {
@@ -108,5 +109,44 @@ func TestRemoveNthLastNode(t *testing.T) {
 		if llResult.String() != llExpected.String() {
 			t.Errorf("RemoveNthLastNode(%v, %v) = %v, expected %v", tc.nums, tc.delete, llResult.String(), llExpected.String())
 		}
+	}
+}
+
+func TestSortColors(t *testing.T) {
+	testCases := []struct {
+		name     string
+		colors   []int
+		expected []int
+	}{
+		{
+			name:     "Case 1",
+			colors:   []int{0, 1, 0},
+			expected: []int{0, 0, 1},
+		},
+		{
+			name:     "Case 2",
+			colors:   []int{1},
+			expected: []int{1},
+		},
+		{
+			name:     "Case 3",
+			colors:   []int{2, 2},
+			expected: []int{2, 2},
+		},
+		{
+			name:     "Case 4",
+			colors:   []int{1, 1, 0, 2},
+			expected: []int{0, 1, 1, 2},
+		},
+		{
+			name:     "Case 5",
+			colors:   []int{2, 1, 1, 0, 0},
+			expected: []int{0, 0, 1, 1, 2},
+		},
+	}
+
+	for _, tc := range testCases {
+		got := two_pointers.SortColors(tc.colors)
+		assert.Equal(t, tc.expected, got)
 	}
 }

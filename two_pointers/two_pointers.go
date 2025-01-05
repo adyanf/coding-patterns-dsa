@@ -58,3 +58,24 @@ func RemoveNthLastNode(head *structs.LinkedListNode, n int) *structs.LinkedListN
 
 	return head
 }
+
+func SortColors(colors []int) []int {
+	left := 0
+	right := len(colors) - 1
+	i := 0
+
+	for i <= right {
+		if colors[i] == 0 {
+			colors[i], colors[left] = colors[left], colors[i]
+			left++
+			i++
+		} else if colors[i] == 1 {
+			i++
+		} else if colors[i] == 2 {
+			colors[i], colors[right] = colors[right], colors[i]
+			right--
+		}
+	}
+
+	return colors
+}
