@@ -3,8 +3,8 @@ package two_pointers_test
 import (
 	"testing"
 
+	"github.com/adyanf/coding-patterns-dsa/patterns/two_pointers"
 	"github.com/adyanf/coding-patterns-dsa/structs"
-	"github.com/adyanf/coding-patterns-dsa/two_pointers"
 	"github.com/stretchr/testify/assert"
 )
 

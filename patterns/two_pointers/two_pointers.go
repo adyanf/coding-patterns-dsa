@@ -12,7 +12,7 @@ import (
 // Usually, these pointers start from different positions in the data structure or move in different directions / steps.
 // These pointers dynamically adjust based on specific conditions or criteria,
 // allowing for the efficient exploration of the data and enabling solutions with optimal time and space complexity.
-// Use this pattern when this conditions are fulfilled:
+// Use this pattern when these conditions are fulfilled:
 // 1. Linear data structure: The input data can be traversed in a linear fashion, such as an array, linked list, or string.
 // 2. Process pairs: Process data elements at two different positions simultaneously.
 // 3. Dynamic pointer movement: Both pointers move independently of each other according to certain conditions or criteria.
