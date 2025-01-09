@@ -81,3 +81,44 @@ func TestFindDuplicate(t *testing.T) {
 		}
 	}
 }
+
+func TestCircularArrayLoop(t *testing.T) {
+	testCases := []struct {
+		name     string
+		nums     []int
+		expected bool
+	}{
+		{
+			name:     "Case 1",
+			nums:     []int{1, 3, -2, -4, 1},
+			expected: true,
+		},
+		{
+			name:     "Case 2",
+			nums:     []int{2, 1, -1, -2},
+			expected: false,
+		},
+		{
+			name:     "Case 3",
+			nums:     []int{5, 4, -2, -1, 3},
+			expected: false,
+		},
+		{
+			name:     "Case 4",
+			nums:     []int{1, 2, -3, 3, 4, 7, 1},
+			expected: true,
+		},
+		{
+			name:     "Case 5",
+			nums:     []int{3, 3, 1, -1, 2},
+			expected: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		got := fast_and_slow_pointers.CircularArrayLoop(tc.nums)
+		if got != tc.expected {
+			t.Errorf("CircularArrayLoop(%v) = %v, expected %v", tc.nums, got, tc.expected)
+		}
+	}
+}

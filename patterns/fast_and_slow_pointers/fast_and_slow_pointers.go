@@ -29,3 +29,56 @@ func FindDuplicate(nums []int) int {
 
 	return fast
 }
+
+func CircularArrayLoop(nums []int) bool {
+	for i := 0; i < len(nums); i++ {
+		slow, fast := i, i
+
+		for {
+			slow = correctIndex(nums, slow+nums[slow])
+			fast = correctIndex(nums, fast+nums[fast]+nums[correctIndex(nums, fast+nums[fast])])
+			if slow == fast {
+				break
+			}
+		}
+
+		count, direction, diffDirection := 0, 1, false
+		if nums[slow] < 0 {
+			direction = -1
+		}
+
+		slow = correctIndex(nums, slow+nums[slow])
+		if nums[slow]*direction < 0 {
+			continue
+		}
+		count++
+
+		for slow != fast {
+			slow = correctIndex(nums, slow+nums[slow])
+			if nums[slow]*direction < 0 {
+				diffDirection = true
+				break
+			}
+			count++
+		}
+
+		if diffDirection || count < 2 {
+			continue
+		}
+
+		return true
+	}
+
+	return false
+}
+
+func correctIndex(nums []int, index int) int {
+	trueIndex := index
+	for trueIndex < 0 {
+		trueIndex = trueIndex + len(nums)
+	}
+	for trueIndex >= len(nums) {
+		trueIndex = trueIndex - len(nums)
+	}
+	return trueIndex
+}
