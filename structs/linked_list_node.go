@@ -18,3 +18,16 @@ func InitLinkedListNode(data int) *LinkedListNode {
 	node.Next = nil
 	return node
 }
+
+func ReverseLinkedList(head *LinkedListNode) *LinkedListNode {
+	var prev, next, curr *LinkedListNode = nil, nil, head
+
+	for curr != nil {
+		next = curr.Next
+		curr.Next = prev
+		prev = curr
+		curr = next
+	}
+
+	return prev
+}

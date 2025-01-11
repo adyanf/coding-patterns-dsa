@@ -1,5 +1,7 @@
 package fast_and_slow_pointers
 
+import "github.com/adyanf/coding-patterns-dsa/structs"
+
 // Fast and slow pointers pattern uses two pointers to traverse an iterable data structure,
 // but the pointers move at different speeds, often to identify cycles or find a specific target.
 // The speeds of the pointers can be adjusted according to the problem statement.
@@ -56,6 +58,27 @@ func CircularArrayLoop(nums []int) bool {
 	}
 
 	return false
+}
+
+func Palindrome(head *structs.LinkedListNode) bool {
+	slow, fast := head, head
+	for fast != nil && fast.Next != nil {
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	reverseHalfList := structs.ReverseLinkedList(slow)
+	slow = head
+	for reverseHalfList != nil {
+		if slow.Data != reverseHalfList.Data {
+			return false
+		}
+		slow = slow.Next
+		reverseHalfList = reverseHalfList.Next
+	}
+	structs.ReverseLinkedList(slow)
+
+	return true
 }
 
 func nextIndex(currentIndex int, indexValue int, arraySize int) int {

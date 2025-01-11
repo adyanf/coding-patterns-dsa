@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/adyanf/coding-patterns-dsa/patterns/fast_and_slow_pointers"
+	"github.com/adyanf/coding-patterns-dsa/structs"
 )
 
 func TestFindDuplicate(t *testing.T) {
@@ -119,6 +120,50 @@ func TestCircularArrayLoop(t *testing.T) {
 		got := fast_and_slow_pointers.CircularArrayLoop(tc.nums)
 		if got != tc.expected {
 			t.Errorf("CircularArrayLoop(%v) = %v, expected %v", tc.nums, got, tc.expected)
+		}
+	}
+}
+
+func TestPalindrome(t *testing.T) {
+	testCases := []struct {
+		name     string
+		nums     []int
+		expected bool
+	}{
+		{
+			name:     "Case 1",
+			nums:     []int{1, 2, 3, 2, 1},
+			expected: true,
+		},
+		{
+			name:     "Case 2",
+			nums:     []int{4, 7, 9, 5, 4},
+			expected: false,
+		},
+		{
+			name:     "Case 3",
+			nums:     []int{2, 3, 5, 5, 3, 2},
+			expected: true,
+		},
+		{
+			name:     "Case 4",
+			nums:     []int{6, 1, 0, 5, 1, 6},
+			expected: false,
+		},
+		{
+			name:     "Case 5",
+			nums:     []int{3, 6, 9, 8, 4, 8, 9, 6, 3},
+			expected: true,
+		},
+	}
+
+	for _, tc := range testCases {
+		ll := &structs.LinkedList{}
+		ll.CreateLinkedList(tc.nums)
+
+		got := fast_and_slow_pointers.Palindrome(ll.Head)
+		if got != tc.expected {
+			t.Errorf("Palindrome(%v) = %v, expected %v", tc.nums, got, tc.expected)
 		}
 	}
 }
