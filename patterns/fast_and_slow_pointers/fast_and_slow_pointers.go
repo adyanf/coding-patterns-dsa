@@ -81,6 +81,19 @@ func Palindrome(head *structs.LinkedListNode) bool {
 	return true
 }
 
+func IsHappy(num int) bool {
+	slow, fast := num, calculateSumOfSquaredDigits(num)
+	for fast != 1 && slow != fast {
+		slow = calculateSumOfSquaredDigits(slow)
+		fast = calculateSumOfSquaredDigits(calculateSumOfSquaredDigits(fast))
+	}
+
+	if fast == 1 {
+		return true
+	}
+	return false
+}
+
 func nextIndex(currentIndex int, indexValue int, arraySize int) int {
 	nextIdx := currentIndex + indexValue
 	if nextIdx < 0 {
@@ -103,6 +116,17 @@ func isNotCycle(nums []int, prevDirection bool, index int) bool {
 	} else {
 		return false
 	}
+}
+
+func calculateSumOfSquaredDigits(num int) int {
+	sum := 0
+	for num > 0 {
+		digit := num % 10
+		num = num / 10
+		sum += digit * digit
+	}
+
+	return sum
 }
 
 func absInt(num int) int {

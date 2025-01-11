@@ -167,3 +167,44 @@ func TestPalindrome(t *testing.T) {
 		}
 	}
 }
+
+func TestIsHappy(t *testing.T) {
+	tests := []struct {
+		name     string
+		nums     int
+		expected bool
+	}{
+		{
+			name:     "Case 1",
+			nums:     2147483646,
+			expected: false,
+		},
+		{
+			name:     "Case 2",
+			nums:     1,
+			expected: true,
+		},
+		{
+			name:     "Case 3",
+			nums:     19,
+			expected: true,
+		},
+		{
+			name:     "Case 4",
+			nums:     8,
+			expected: false,
+		},
+		{
+			name:     "Case 5",
+			nums:     7,
+			expected: true,
+		},
+	}
+
+	for _, tc := range tests {
+		got := fast_and_slow_pointers.IsHappy(tc.nums)
+		if got != tc.expected {
+			t.Errorf("IsHappy(%v) = %v, expected %v", tc.nums, got, tc.expected)
+		}
+	}
+}
