@@ -31,54 +31,60 @@ func FindDuplicate(nums []int) int {
 }
 
 func CircularArrayLoop(nums []int) bool {
-	for i := 0; i < len(nums); i++ {
+	arraySize := len(nums)
+	for i := 0; i < arraySize; i++ {
 		slow, fast := i, i
+		direction := nums[i] > 0
 
 		for {
-			slow = correctIndex(nums, slow+nums[slow])
-			fast = correctIndex(nums, fast+nums[fast]+nums[correctIndex(nums, fast+nums[fast])])
+			slow = nextIndex(slow, nums[slow], arraySize)
+			if isNotCycle(nums, direction, slow) {
+				break
+			}
+			fast = nextIndex(fast, nums[fast], arraySize)
+			if isNotCycle(nums, direction, fast) {
+				break
+			}
+			fast = nextIndex(fast, nums[fast], arraySize)
+			if isNotCycle(nums, direction, fast) {
+				break
+			}
 			if slow == fast {
-				break
+				return true
 			}
 		}
-
-		count, direction, diffDirection := 0, 1, false
-		if nums[slow] < 0 {
-			direction = -1
-		}
-
-		slow = correctIndex(nums, slow+nums[slow])
-		if nums[slow]*direction < 0 {
-			continue
-		}
-		count++
-
-		for slow != fast {
-			slow = correctIndex(nums, slow+nums[slow])
-			if nums[slow]*direction < 0 {
-				diffDirection = true
-				break
-			}
-			count++
-		}
-
-		if diffDirection || count < 2 {
-			continue
-		}
-
-		return true
 	}
 
 	return false
 }
 
-func correctIndex(nums []int, index int) int {
-	trueIndex := index
-	for trueIndex < 0 {
-		trueIndex = trueIndex + len(nums)
+func nextIndex(currentIndex int, indexValue int, arraySize int) int {
+	nextIdx := currentIndex + indexValue
+	if nextIdx < 0 {
+		nextIdx = nextIdx + arraySize
 	}
-	for trueIndex >= len(nums) {
-		trueIndex = trueIndex - len(nums)
+	if nextIdx >= arraySize {
+		nextIdx = nextIdx - arraySize
 	}
-	return trueIndex
+	return nextIdx
+}
+
+func isNotCycle(nums []int, prevDirection bool, index int) bool {
+	nextDirection := nums[index] > 0
+
+	// check if the next direction is the same as the previous direction
+	// and check if the cycle is of an element pointing to itself
+	// if so, it is not a cycle
+	if (prevDirection != nextDirection) || (absInt(nums[index])%len(nums) == 0) {
+		return true
+	} else {
+		return false
+	}
+}
+
+func absInt(num int) int {
+	if num < 0 {
+		return -num
+	}
+	return num
 }
