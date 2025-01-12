@@ -34,3 +34,38 @@ func FindLongestSubstring(str string) int {
 	}
 	return maxLen
 }
+
+func LongestRepeatingCharacterReplacement(s string, k int) int {
+	stringLength := len(s)
+	start := 0
+	lengthOfMaxSubstring := 0
+	charFreq := make(map[byte]int)
+	mostFreqChar := 0
+
+	for end := 0; end < stringLength; end++ {
+		// increment the frequency of the iterated character
+		charFreq[s[end]]++
+
+		// check the most frequent character
+		mostFreqChar = maxInt(mostFreqChar, charFreq[s[end]])
+
+		// if the window required more than k replacement to be valid, then move the start window forward
+		// consequently, reduce the frequency of the character at the start of the window
+		if end-start+1-mostFreqChar > k {
+			charFreq[s[start]]--
+			start++
+		}
+
+		// update the length of the longest substring
+		lengthOfMaxSubstring = maxInt(lengthOfMaxSubstring, end-start+1)
+	}
+
+	return lengthOfMaxSubstring
+}
+
+func maxInt(a int, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}

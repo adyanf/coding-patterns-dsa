@@ -1,6 +1,10 @@
-package sliding_window
+package sliding_window_test
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/adyanf/coding-patterns-dsa/patterns/sliding_window"
+)
 
 func TestFindLongestSubstring(t *testing.T) {
 	testCases := []struct {
@@ -36,9 +40,62 @@ func TestFindLongestSubstring(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		got := FindLongestSubstring(tc.str)
+		got := sliding_window.FindLongestSubstring(tc.str)
 		if got != tc.expected {
 			t.Errorf("FindLongestSubstring(%v) = %v, expected %v", tc.str, got, tc.expected)
+		}
+	}
+}
+
+func TestLongestRepeatingCharacterReplacement(t *testing.T) {
+	testCases := []struct {
+		name     string
+		s        string
+		k        int
+		expected int
+	}{
+		{
+			name:     "Case 1",
+			s:        "aaacbbbaabab",
+			k:        2,
+			expected: 6,
+		},
+		{
+			name:     "Case 2",
+			s:        "aaacbbbaabab",
+			k:        1,
+			expected: 4,
+		},
+		{
+			name:     "Case 3",
+			s:        "dippitydip",
+			k:        4,
+			expected: 6,
+		},
+		{
+			name:     "Case 4",
+			s:        "coollooc",
+			k:        2,
+			expected: 6,
+		},
+		{
+			name:     "Case 5",
+			s:        "aaaaaaaaaa",
+			k:        2,
+			expected: 10,
+		},
+		{
+			name:     "Case 6",
+			s:        "mbjhzdidgyzfmegqmabvdqjdlkzhqejjnwwarshmziqokbnalmtqjxzcpofgfjfembxdaubqmfjedchojpveyzlcyhjbyvlflmdizempazgrmsvxjyzrslamvszzukvrudzghrcmohoittwrjjdpyrfpexciuczivimdbgvddyrvhxtkrlpixifovlvgawpslhyiuqypdckfvyincjkliskzsofckfjqitirvmzevxmtgkpkylucrwqqtkltvtzuuyzgpyiudfftuhcpkykrlmhywwwoqfsxkjupbikymlzosythoboyomkebergpmajnwqxuarhssgweaziuyeppubxmnbqjsopfxvlzwaqdjxgledtppepakcqewlniiwkitoemvkxktcwrilnotrtwjiszvhfetnenxcvnczohlllwdeirjkkljjukzrgjnauupwkwijqxzaosryjrcojmxqyfrmokuuyywyotgywbujgugvtdbqdkuxtgoobximfixpgrktbcwdyyznlmibkdfbqbyrfwaegxceedbxoevioclgpmwclnxvnrwlftmfrzkdthrrdudqaiuxrclvukhonhwbxuvfrquvbylkkztyjbwihiztcowvzpcsvhowttljzgwmjynlmxhreepvmmgsofqpbzqmrhebztogfqvncmtrorvujcknvlyueixqwvvpiogecwqmfkqddazcwmyxdpaheupibmmhqhwtzvtxkumzwretgfidzfsttdsafvqfojvdemhaqovaczjwshaivysrmsinndvwstvfbjxcvqiwkaqfvzuxkrkguymuuazxopfotdphzowpngnmrmgvxmdvdycyniaunlviwpuvdhvhnngrfzfiqnjhsmeqemhzbtfaynupqcxggftgzvfwgdetzlxmraeytijttudiywbctrwikcjwcjqnaxmucqanjfffmbbuubhrgqnrsvvfqenbynbpiiptlwram",
+			k:        903,
+			expected: 952,
+		},
+	}
+
+	for _, tc := range testCases {
+		got := sliding_window.LongestRepeatingCharacterReplacement(tc.s, tc.k)
+		if got != tc.expected {
+			t.Errorf("FindLongestSubstringWithCharacterReplacement(%v, %v) = %v, expected %v", tc.s, tc.k, got, tc.expected)
 		}
 	}
 }
