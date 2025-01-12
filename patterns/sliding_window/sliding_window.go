@@ -1,6 +1,10 @@
 package sliding_window
 
-import "github.com/adyanf/coding-patterns-dsa/structs"
+import (
+	"math"
+
+	"github.com/adyanf/coding-patterns-dsa/structs"
+)
 
 // Sliding window pattern is used to process sequential data, arrays, and strings, for example, to efficiently solve
 // subarray or substring problems. It involves maintaining a dynamic window that slides through the array or string,
@@ -79,6 +83,41 @@ func FindRepeatedSequences(dna string, k int) *structs.Set {
 
 		start++
 	}
+	return output
+}
+
+func FindRepeatedSequencesWithRabinKarpAlgorithm(dna string, k int) *structs.Set {
+	stringLength := len(dna)
+
+	nucleotidesMapping := map[rune]int{'A': 1, 'C': 2, 'G': 3, 'T': 4}
+	baseValue := 4
+
+	numbers := make([]int, stringLength)
+	for i, ch := range dna {
+		numbers[i] = nucleotidesMapping[ch]
+	}
+
+	hashValue := 0
+
+	hashSet := structs.NewSet()
+	output := structs.NewSet()
+
+	for i := 0; i <= stringLength-k; i++ {
+		if i == 0 {
+			for j := 0; j < k; j++ {
+				hashValue += numbers[j] * int(math.Pow(float64(baseValue), float64(k-j-1)))
+			}
+		} else {
+			hashValue = (hashValue-(numbers[i-1]*int(math.Pow(float64(baseValue), float64(k-1)))))*baseValue + numbers[i+k-1]
+		}
+
+		if hashSet.Exists(hashValue) {
+			output.Add(dna[i : i+k])
+		}
+
+		hashSet.Add(hashValue)
+	}
+
 	return output
 }
 
