@@ -99,3 +99,77 @@ func TestLongestRepeatingCharacterReplacement(t *testing.T) {
 		}
 	}
 }
+
+func TestFindRepeatedSequences(t *testing.T) {
+	testCases := []struct {
+		name     string
+		dna      string
+		k        int
+		expected map[interface{}]bool
+	}{
+		{
+			name: "Case 1",
+			dna:  "AAAAACCCCCAAAAACCCCCC",
+			k:    8,
+			expected: map[interface{}]bool{
+				"AAAAACCC": true,
+				"AAAACCCC": true,
+				"AAACCCCC": true,
+			},
+		},
+		{
+			name: "Case 2",
+			dna:  "GGGGGGGGGGGGGGGGGGGGGGGGG",
+			k:    9,
+			expected: map[interface{}]bool{
+				"GGGGGGGGG": true,
+			},
+		},
+		{
+			name: "Case 3",
+			dna:  "TTTTTCCCCCCCTTTTTTCCCCCCCTTTTTTT",
+			k:    10,
+			expected: map[interface{}]bool{
+				"CCCCCCCTTT": true,
+				"CCCCCCTTTT": true,
+				"CCCCCTTTTT": true,
+				"CCCCTTTTTT": true,
+				"TCCCCCCCTT": true,
+				"TTCCCCCCCT": true,
+				"TTTCCCCCCC": true,
+				"TTTTCCCCCC": true,
+				"TTTTTCCCCC": true,
+			},
+		},
+		{
+			name: "Case 4",
+			dna:  "AAAAAACCCCCCCAAAAAAAACCCCCCCTG",
+			k:    10,
+			expected: map[interface{}]bool{
+				"AAAAAACCCC": true,
+				"AAAAACCCCC": true,
+				"AAAACCCCCC": true,
+				"AAACCCCCCC": true,
+			},
+		},
+		{
+			name: "Case 5",
+			dna:  "ATATATATATATATAT",
+			k:    6,
+			expected: map[interface{}]bool{
+				"ATATAT": true,
+				"TATATA": true,
+			},
+		},
+	}
+
+	for _, tc := range testCases {
+		got := sliding_window.FindRepeatedSequences(tc.dna, tc.k)
+		for key := range tc.expected {
+			if !got.Exists(key) {
+				t.Errorf("FindRepeatedSequences(%v, %v) = %v, expected %v", tc.dna, tc.k, got, tc.expected)
+				break
+			}
+		}
+	}
+}

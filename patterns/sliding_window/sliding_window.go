@@ -1,5 +1,7 @@
 package sliding_window
 
+import "github.com/adyanf/coding-patterns-dsa/structs"
+
 // Sliding window pattern is used to process sequential data, arrays, and strings, for example, to efficiently solve
 // subarray or substring problems. It involves maintaining a dynamic window that slides through the array or string,
 // adjusting its boundaries as needed to track relevant elements or characters. The window is used to slide over the data
@@ -61,6 +63,23 @@ func LongestRepeatingCharacterReplacement(s string, k int) int {
 	}
 
 	return lengthOfMaxSubstring
+}
+
+func FindRepeatedSequences(dna string, k int) *structs.Set {
+	output := structs.NewSet()
+	sequenceFreq := make(map[string]int)
+	start := 0
+
+	for start <= len(dna)-k {
+		dnaSequence := dna[start : start+k]
+		sequenceFreq[dnaSequence]++
+		if sequenceFreq[dnaSequence] > 1 && !output.Exists(dnaSequence) {
+			output.Add(dnaSequence)
+		}
+
+		start++
+	}
+	return output
 }
 
 func maxInt(a int, b int) int {
