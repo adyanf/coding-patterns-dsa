@@ -98,3 +98,52 @@ func TestMergeIntervals(t *testing.T) {
 		})
 	}
 }
+
+func TestInsertInterval(t *testing.T) {
+	testCases := []struct {
+		name     string
+		existing [][]int
+		new      []int
+		expected [][]int
+	}{
+		{
+			name:     "Case 1",
+			existing: [][]int{{1, 2}, {3, 4}, {5, 8}, {9, 15}},
+			new:      []int{2, 5},
+			expected: [][]int{{1, 8}, {9, 15}},
+		},
+		{
+			name:     "Case 2",
+			existing: [][]int{{1, 6}, {8, 9}, {10, 15}, {16, 18}},
+			new:      []int{9, 10},
+			expected: [][]int{{1, 6}, {8, 15}, {16, 18}},
+		},
+		{
+			name:     "Case 3",
+			existing: [][]int{{1, 2}, {3, 4}, {5, 8}, {9, 15}},
+			new:      []int{16, 17},
+			expected: [][]int{{1, 2}, {3, 4}, {5, 8}, {9, 15}, {16, 17}},
+		},
+		{
+			name:     "Case 4",
+			existing: [][]int{{1, 4}, {5, 6}, {7, 8}, {9, 10}},
+			new:      []int{1, 5},
+			expected: [][]int{{1, 6}, {7, 8}, {9, 10}},
+		},
+		{
+			name:     "Case 5",
+			existing: [][]int{{1, 3}, {4, 6}, {7, 8}, {9, 10}},
+			new:      []int{1, 10},
+			expected: [][]int{{1, 10}},
+		},
+	}
+
+	for _, test := range testCases {
+		t.Run(test.name, func(t *testing.T) {
+			result := merge_intervals.InsertInterval(test.existing, test.new)
+			if fmt.Sprintf("%v", result) != fmt.Sprintf("%v", test.expected) {
+				t.Errorf("InsertInterval(%v, %v) = %v, want %v", test.existing, test.new, result, test.expected)
+			}
+		})
+	}
+}

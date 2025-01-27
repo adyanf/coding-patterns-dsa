@@ -76,16 +76,59 @@ func MergeIntervals(intervals [][]int) [][]int {
 
 		// two intervals intersect
 		if currentStart <= prevEnd {
-			// completely inside
-			if currentEnd <= prevEnd {
-			} else {
-				// overlapping
+			// if overlapping - update the end time of the last interval
+			if currentEnd > prevEnd {
 				lastAddedInterval[1] = currentEnd
+			} else {
+				// completely inside, do nothing
 			}
 		} else {
 			// two intervals not intersect at all
 			result = append(result, intervals[i])
 		}
+	}
+
+	return result
+}
+
+// InsertInterval inserts a new interval into an existing intervals
+// The result will be sorted and non-overlapping
+func InsertInterval(existingIntervals [][]int, newInterval []int) [][]int {
+	newStart, newEnd := newInterval[0], newInterval[1]
+	i, n := 0, len(existingIntervals)
+	var result [][]int
+
+	// insert existing intervals which have start time less than or equal to the new interval start time
+	for i < n && existingIntervals[i][0] <= newStart {
+		result = append(result, existingIntervals[i])
+		i++
+	}
+
+	// insert the new interval
+	// if the result is still empty or the new interval start time is greater than the last interval end time (not overlap), then append the new interval
+	// otherwise, if the new interval end time is greater than the last interval end time (not completely inside), then update the last interval end time
+	if len(result) == 0 || newStart > result[len(result)-1][1] {
+		result = append(result, []int{newStart, newEnd})
+	} else {
+		if newEnd > result[len(result)-1][1] {
+			result[len(result)-1][1] = newEnd
+		}
+	}
+
+	for i < n {
+		lastIndex := len(result) - 1
+		// two intervals intersect
+		if existingIntervals[i][0] <= result[lastIndex][1] {
+			// if two intervals overlapping - update the end time of the last interval
+			if existingIntervals[i][1] > result[lastIndex][1] {
+				result[lastIndex][1] = existingIntervals[i][1]
+			}
+		} else {
+			// if the new interval is not inserted, then append it to the end of the result
+			result = append(result, existingIntervals[i])
+		}
+
+		i++
 	}
 
 	return result
