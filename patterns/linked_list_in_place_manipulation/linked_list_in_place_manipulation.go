@@ -158,7 +158,7 @@ func ReorderList(head *structs.LinkedListNode) {
 
 	// Reorder list by moving the node in fast pointer between the node in slow pointer
 	slow, fast = head, prev
-	for fast.Next != nil {
+	for fast != nil && fast.Next != nil {
 		nextSlow := slow.Next
 		slow.Next = fast
 		slow = nextSlow
