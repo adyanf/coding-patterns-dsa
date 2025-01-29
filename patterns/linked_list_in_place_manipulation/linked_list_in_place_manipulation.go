@@ -1,0 +1,48 @@
+package linked_list_in_place_manipulation
+
+import "github.com/adyanf/coding-patterns-dsa/structs"
+
+// The in-place manipulation of a linked list pattern allows us to modify a linked list without using any additional memory.
+// In-place refers to an algorithm that processes or modifies a data structure using only the existing memory space,
+// without requiring additional memory proportional to the input size.
+// This pattern is best suited for problems where we need to modify the structure of the linked list, i.e., the order in which nodes are linked together.
+// How can we implement the in-place reversal of nodes so that no extra space is used?
+// We iterate over the linked list while keeping track of three nodes: the current node, the next node, and the previous node.
+// Keeping track of these three nodes enables us to efficiently reverse the links between every pair of nodes.
+// This in-place reversal of a linked list works in O(n) time and consumes only O(1) space.
+// Use this pattern when these conditions are fulfilled:
+// - Linked list restructuring: The input data is given as a linked list, and the task is to modify its structure without modifying the data of the individual nodes.
+// - In-place modification: The modifications to the linked list must be made in place, that is, we’re not allowed to use more than O(1) additional space.
+
+// SwapPairs swaps every two adjacent nodes of the linked list. After the swap, return the head of the linked list.
+func SwapPairs(head *structs.LinkedListNode) *structs.LinkedListNode {
+	// if the linked list length is less than 2 then return the head
+	if head == nil || head.Next == nil {
+		return head
+	}
+
+	// because min length of the linked list is 2, we can assume the new head will be the next of the head
+	newHead := head.Next
+
+	// keep track of current node and previous node
+	prev := (*structs.LinkedListNode)(nil)
+	current := head
+	for current != nil && current.Next != nil {
+		// 2 -> 1(prev) -> 3(current) -> 4 -> 5 to 2 -> 1 -> 4 -> 3(prev) -> 5(current)
+		// connect 3 -> 5
+		// connect 4 -> 3
+		// connect 1 -> 4
+		next := current.Next
+		current.Next = next.Next
+		next.Next = current
+		if prev != nil {
+			prev.Next = next
+		}
+		// move prev to current node
+		prev = current
+		// move current to current next node
+		current = current.Next
+	}
+
+	return newHead
+}
