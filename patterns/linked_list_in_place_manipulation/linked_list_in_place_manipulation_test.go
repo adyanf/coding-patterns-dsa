@@ -183,3 +183,51 @@ func TestReverseBetweenV2(t *testing.T) {
 		}
 	}
 }
+
+func TestReorderList(t *testing.T) {
+	testCases := []struct {
+		name     string
+		nums     []int
+		expected []int
+	}{
+		{
+			name:     "Case 1",
+			nums:     []int{1, 1, 2, 2, 3, -1, 10, 12},
+			expected: []int{1, 12, 1, 10, 2, -1, 2, 3},
+		},
+		{
+			name:     "Case 2",
+			nums:     []int{10, 20, -22, 21, -12},
+			expected: []int{10, -12, 20, 21, -22},
+		},
+		{
+			name:     "Case 3",
+			nums:     []int{1, 3, 5, 7, 9, 10, 8, 6, 4, 2},
+			expected: []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
+		},
+		{
+			name:     "Case 4",
+			nums:     []int{1, 2, 3, 4, 5, 6},
+			expected: []int{1, 6, 2, 5, 3, 4},
+		},
+		{
+			name:     "Case 5",
+			nums:     []int{7, 0, 10, 13, 12, 19, 1, 3, 6, 7, 4, 2, 11},
+			expected: []int{7, 11, 0, 2, 10, 4, 13, 7, 12, 6, 19, 3, 1},
+		},
+	}
+
+	for _, tc := range testCases {
+		ll := &structs.LinkedList{}
+		ll.CreateLinkedList(tc.nums)
+
+		linked_list_in_place_manipulation.ReorderList(ll.Head)
+
+		llExpected := &structs.LinkedList{}
+		llExpected.CreateLinkedList(tc.expected)
+
+		if ll.String() != llExpected.String() {
+			t.Errorf("ReorderList(%v) = %v, expected %v", tc.nums, ll.String(), llExpected.String())
+		}
+	}
+}

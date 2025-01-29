@@ -130,3 +130,47 @@ func ReverseBetweenV2(head *structs.LinkedListNode, left int, right int) *struct
 
 	return dummy.Next
 }
+
+// ReorderList reorder the list as if it were folded on itself
+// L0 -> L1 -> L2 -> Ln-2 -> Ln-1 -> Ln ==> L0 -> Ln -> L1 -> Ln-1 -> L2 -> Ln-2
+func ReorderList(head *structs.LinkedListNode) {
+	// if length of the linked list is less than 3 then return head
+	if head == nil || head.Next == nil || head.Next.Next == nil {
+		return
+	}
+
+	// search the middle part of the linked list
+	// when the fast pointer reach the end of linked list
+	// the slow pointer will be at the start of second half of the linked list
+	// we need to keep the prev slow too, since it will be the end of the first half of linked list
+	slow, fast, prevSlow := head, head, (*structs.LinkedListNode)(nil)
+	for fast != nil && fast.Next != nil {
+		prevSlow = slow
+		slow = slow.Next
+		fast = fast.Next.Next
+	}
+
+	// reverse the second half of the linked list
+	var prev, next, curr *structs.LinkedListNode = nil, nil, slow
+	for curr != nil {
+		next = curr.Next
+		curr.Next = prev
+		prev = curr
+		curr = next
+	}
+	prevSlow.Next = prev
+
+	// Reorder list by moving the node in fast pointer between the node in slow pointer
+	prevFast := prevSlow
+	fast = prevSlow.Next
+	slow = head
+	for slow != prevFast {
+		nextSlow := slow.Next
+		nextFast := fast.Next
+		slow.Next = fast
+		fast.Next = nextSlow
+		prevFast.Next = nextFast
+		slow = nextSlow
+		fast = nextFast
+	}
+}
