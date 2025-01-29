@@ -46,3 +46,51 @@ func SwapPairs(head *structs.LinkedListNode) *structs.LinkedListNode {
 
 	return newHead
 }
+
+// ReverseBetween reverse the nodes of the list from left to right, given a singly linked list with n nodes and left and right positions.
+func ReverseBetween(head *structs.LinkedListNode, left int, right int) *structs.LinkedListNode {
+	// if head node is empty or if left equal to right (then no node needed to be reversed), return head directly
+	if head == nil || left == right {
+		return head
+	}
+
+	newHead := head
+
+	// move the pointer until reach the left
+	prevLeft := (*structs.LinkedListNode)(nil)
+	nodeLeft := head
+	i := 1
+	for i < left {
+		prevLeft = nodeLeft
+		nodeLeft = nodeLeft.Next
+		i++
+	}
+
+	// adjust the pointer next for each node which index between left and right
+	prev := (*structs.LinkedListNode)(nil)
+	current := nodeLeft
+	next := nodeLeft.Next
+	for i <= right {
+		current.Next = prev
+
+		prev = current
+		current = next
+		if current != nil {
+			next = current.Next
+		}
+		i++
+	}
+
+	// connect the prev left node to right node
+	if prevLeft != nil {
+		prevLeft.Next = prev
+	}
+	// connect left node to next right node (which is pointed by current)
+	nodeLeft.Next = current
+
+	// if the left equal to 1 then the head will change to the right node, which is the prev node
+	if left == 1 {
+		newHead = prev
+	}
+	return newHead
+}
