@@ -142,12 +142,9 @@ func ReorderList(head *structs.LinkedListNode) {
 	// search the middle part of the linked list
 	// when the fast pointer reach the end of linked list
 	// the slow pointer will be at the start of second half of the linked list
-	// we need to keep the prev slow too, since it will be the end of the first half of linked list
-	slow, fast, prevSlow := head, head, (*structs.LinkedListNode)(nil)
+	slow, fast := head, head
 	for fast != nil && fast.Next != nil {
-		prevSlow = slow
-		slow = slow.Next
-		fast = fast.Next.Next
+		slow, fast = slow.Next, fast.Next.Next
 	}
 
 	// reverse the second half of the linked list
@@ -158,19 +155,16 @@ func ReorderList(head *structs.LinkedListNode) {
 		prev = curr
 		curr = next
 	}
-	prevSlow.Next = prev
 
 	// Reorder list by moving the node in fast pointer between the node in slow pointer
-	prevFast := prevSlow
-	fast = prevSlow.Next
-	slow = head
-	for slow != prevFast {
+	slow, fast = head, prev
+	for fast.Next != nil {
 		nextSlow := slow.Next
-		nextFast := fast.Next
 		slow.Next = fast
-		fast.Next = nextSlow
-		prevFast.Next = nextFast
 		slow = nextSlow
+
+		nextFast := fast.Next
+		fast.Next = slow
 		fast = nextFast
 	}
 }
