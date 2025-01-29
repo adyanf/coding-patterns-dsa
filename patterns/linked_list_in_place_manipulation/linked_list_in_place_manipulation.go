@@ -94,3 +94,39 @@ func ReverseBetween(head *structs.LinkedListNode, left int, right int) *structs.
 	}
 	return newHead
 }
+
+// ReverseBetweenV2 reverse the nodes of the list from left to right, given a singly linked list with n nodes and left and right positions.
+// this method using dummy node as helper and in each iteration we reverse all the connection completely
+func ReverseBetweenV2(head *structs.LinkedListNode, left int, right int) *structs.LinkedListNode {
+	// if head node is empty or if left equal to right (then no node needed to be reversed), return head directly
+	if head == nil || left == right {
+		return head
+	}
+
+	// introduce dummy node to help with edge cases when we need to reverse from the head
+	dummy := structs.NewLinkedListNode(0, nil)
+	dummy.Next = head
+	prev := dummy
+
+	// move the prev node to node before left
+	for i := 1; i < left; i++ {
+		prev = prev.Next
+	}
+
+	// curr node will start at left node
+	curr := prev.Next
+
+	// iterate for right - left times, in each iteration
+	// set the next node from curr next
+	// point the curr next to next node next
+	// point the next node next to prev node next
+	// point the prev node next to next node
+	for i := 0; i < right-left; i++ {
+		nextNode := curr.Next
+		curr.Next = nextNode.Next
+		nextNode.Next = prev.Next
+		prev.Next = nextNode
+	}
+
+	return dummy.Next
+}
