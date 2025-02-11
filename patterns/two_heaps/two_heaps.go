@@ -108,6 +108,50 @@ func MinimumMachines(tasks [][]int) int {
 	return machines.Len()
 }
 
+// MedianOfStream is a data structure to search a median from a stream of numbers
+type MedianOfStream struct {
+	// We are using two heaps to solve this problem
+	maximumList structs.MaxHeap
+	minimumList structs.MinHeap
+}
+
+// Init will initializes underlying data to handle median of stream of numbers
+func (this *MedianOfStream) Init() {
+	// Init each heap by using container/heap library
+	heap.Init(&this.maximumList)
+	heap.Init(&this.minimumList)
+}
+
+// InsertNum inserts new number to the underlying data store
+func (this *MedianOfStream) InsertNum(num int) float64 {
+	// If maximum list is empty, or if the number is smaller or equal to the top of maximum list
+	// Then push the number to maximum list, otherwise push the number to minimum list
+	if this.maximumList.Empty() || this.maximumList.Top() >= num {
+		heap.Push(&this.maximumList, num)
+	} else {
+		heap.Push(&this.minimumList, num)
+	}
+
+	// Rebalancing the heaps, so that the number of elements in each heap has max diff of 1
+	if this.maximumList.Len() > this.minimumList.Len()+1 {
+		heap.Push(&this.minimumList, heap.Pop(&this.maximumList).(int))
+	} else if this.maximumList.Len() < this.minimumList.Len() {
+		heap.Push(&this.maximumList, heap.Pop(&this.minimumList).(int))
+	}
+
+	return this.FindMedian()
+}
+
+// FindMedian finds the median of stream of numbers
+func (this *MedianOfStream) FindMedian() float64 {
+	// If the number of elements is equal (even), calculate the top of each heap and divide it by 2
+	if this.maximumList.Len() == this.minimumList.Len() {
+		return (float64(this.maximumList.Top()) + float64(this.minimumList.Top())) / 2.0
+	}
+	// Otherwise return the top of maximum list
+	return float64(this.maximumList.Top())
+}
+
 // struct Usage initialization
 type Usage struct {
 	id      int

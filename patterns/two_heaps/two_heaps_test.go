@@ -93,3 +93,51 @@ func TestMinimumMachines(t *testing.T) {
 		})
 	}
 }
+
+func TestFindMedian(t *testing.T) {
+	tests := []struct {
+		name     string
+		numbers  []int
+		expected float64
+	}{
+		{
+			name:     "Case 1",
+			numbers:  []int{1, 2, 3},
+			expected: 2,
+		},
+		{
+			name:     "Case 2",
+			numbers:  []int{22, 35, 36, 27},
+			expected: 31,
+		},
+		{
+			name:     "Case 3",
+			numbers:  []int{1, 1},
+			expected: 1,
+		},
+		{
+			name:     "Case 4",
+			numbers:  []int{-1, -22, -3, -4, -5},
+			expected: -4,
+		},
+		{
+			name:     "Case 5",
+			numbers:  []int{12, 46, 32},
+			expected: 32,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			medianOfStram := twoheaps.MedianOfStream{}
+			medianOfStram.Init()
+
+			for _, num := range test.numbers {
+				medianOfStram.InsertNum(num)
+			}
+
+			if got := medianOfStram.FindMedian(); got != test.expected {
+				t.Errorf("FindMedian(%v) = %v, want %v", test.numbers, got, test.expected)
+			}
+		})
+	}
+}

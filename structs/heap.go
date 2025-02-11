@@ -23,6 +23,11 @@ func (h MinHeap) Swap(i, j int) {
 	h[i], h[j] = h[j], h[i]
 }
 
+// Top returns the top element of the MinHeap
+func (h MinHeap) Top() int {
+	return h[0]
+}
+
 // Push pushes an element into the MinHeap
 func (h *MinHeap) Push(x interface{}) {
 	*h = append(*h, x.(int))
@@ -58,6 +63,11 @@ func (h MaxHeap) Less(i, j int) bool {
 // Swap swaps the elements with indexes i and j
 func (h MaxHeap) Swap(i, j int) {
 	h[i], h[j] = h[j], h[i]
+}
+
+// Top returns the top element of the MaxHeap
+func (h MaxHeap) Top() int {
+	return h[0]
 }
 
 // Push pushes an element into the MaxHeap
