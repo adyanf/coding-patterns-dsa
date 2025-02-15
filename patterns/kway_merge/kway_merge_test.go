@@ -121,3 +121,52 @@ func TestKthSmallestElement(t *testing.T) {
 		})
 	}
 }
+
+func TestKSmallestNumber(t *testing.T) {
+	tests := []struct {
+		name     string
+		lists    [][]int
+		k        int
+		expected int
+	}{
+		{
+			name:     "Case 1",
+			lists:    [][]int{{2, 6, 8}, {3, 7, 10}, {5, 8, 11}},
+			k:        5,
+			expected: 7,
+		},
+		{
+			name:     "Case 2",
+			lists:    [][]int{{1, 2, 3}, {4, 5}, {6, 7, 8, 15}, {10, 11, 12, 13}, {5, 10}},
+			k:        50,
+			expected: 15,
+		},
+		{
+			name:     "Case 3",
+			lists:    [][]int{{1, 1, 1}, {1, 1, 1}},
+			k:        4,
+			expected: 1,
+		},
+		{
+			name:     "Case 4",
+			lists:    [][]int{{4, 6}, {2, 3}, {8, 9}},
+			k:        10,
+			expected: 9,
+		},
+		{
+			name:     "Case 5",
+			lists:    [][]int{{5, 8, 9, 17}, {1, 6, 6, 6}, {8, 17, 23, 24}},
+			k:        6,
+			expected: 8,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := kway_merge.KSmallestNumber(test.lists, test.k)
+			if got != test.expected {
+				t.Errorf("KSmallestNumber(%v, %d) = %d, want %d", test.lists, test.k, got, test.expected)
+			}
+		})
+	}
+}

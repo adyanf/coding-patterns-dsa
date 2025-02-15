@@ -73,7 +73,7 @@ func KthSmallestElement(matrix [][]int, k int) int {
 		heap.Push(&cellMinHeap, Cell{value: matrix[i][0], row: i, column: 0})
 	}
 
-	// init the min element and counter
+	// init the smallest element and counter
 	smallestElement := 0
 	counter := 0
 	for {
@@ -98,6 +98,42 @@ func KthSmallestElement(matrix [][]int, k int) int {
 	}
 
 	return smallestElement
+}
+
+// KSmallestNumber returns the k-th smallest number from lists
+func KSmallestNumber(lists [][]int, k int) int {
+	// init the list min heap to help getting the minimum list element for each iteration
+	var listMinHeap ListMinHeap
+	heap.Init(&listMinHeap)
+
+	// push the value of the first index of each list together with its list index and element index
+	for i := 0; i < len(lists); i++ {
+		if len(lists[i]) > 0 {
+			heap.Push(&listMinHeap, ListElement{listIndex: i, elementIndex: 0, value: lists[i][0]})
+		}
+	}
+
+	// init the smallest element and counter
+	var smallestNumber, counter int
+
+	// iterating as long as the list min heap not empty and counter less than k
+	for !listMinHeap.Empty() && counter < k {
+		// pop the smallest list element
+		smallestListElement := heap.Pop(&listMinHeap).(ListElement)
+		listIndex, elementIndex := smallestListElement.listIndex, smallestListElement.elementIndex
+
+		// set the smallest number and add counter
+		smallestNumber = smallestListElement.value
+		counter += 1
+
+		// if the smallest list element's list still has next element, push it to the list min heap
+		if elementIndex+1 < len(lists[listIndex]) {
+			heap.Push(&listMinHeap, ListElement{listIndex: listIndex, elementIndex: elementIndex + 1, value: lists[listIndex][elementIndex+1]})
+		}
+	}
+
+	// when either list is empty or counter already equal to k then return the smallest number
+	return smallestNumber
 }
 
 // struct Sum initialization
@@ -191,6 +227,55 @@ func (h *CellMinHeap) Push(x interface{}) {
 
 // Pop pops the element at the top of the CellMinHeap
 func (h *CellMinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+// struct ListElement initialization
+type ListElement struct {
+	value        int
+	listIndex    int
+	elementIndex int
+}
+
+// struct ListMinHeap initialization
+type ListMinHeap []ListElement
+
+// Len returns the length of the heap
+func (h ListMinHeap) Len() int {
+	return len(h)
+}
+
+// Empty returns true if the heap is empty
+func (h ListMinHeap) Empty() bool {
+	return len(h) == 0
+}
+
+// Less returns true if the element with index i should sort before the element with index j
+func (h ListMinHeap) Less(i, j int) bool {
+	return h[i].value < h[j].value || (h[i].value == h[j].value && h[i].listIndex < h[j].listIndex)
+}
+
+// Swap swaps the elements with indexes i and j
+func (h ListMinHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+// Top show the fastest end time
+func (h ListMinHeap) Top() interface{} {
+	return h[0]
+}
+
+// Push pushes an element into the ListMinHeap
+func (h *ListMinHeap) Push(x interface{}) {
+	*h = append(*h, x.(ListElement))
+}
+
+// Pop pops the element at the top of the ListMinHeap
+func (h *ListMinHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
