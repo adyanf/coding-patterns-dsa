@@ -27,29 +27,36 @@ import (
 // - Involves merging sorted arrays or a matrix: The problem involves a collection of sorted arrays or a matrix with rows or columns sorted in a specific order that needs to be merged. This could be the core of the problem or a step toward the solution.
 // - Seeking the k-th smallest/largest across sorted collections: The problem involves identifying the k-th smallest or largest element across multiple sorted arrays or linked lists.
 
+// FindKSmallestPairs finds the k smallest pairs from given array list1 and list2
 func FindKSmallestPairs(list1 []int, list2 []int, k int) [][]int {
-	var result [][]int
+	// init the min sum heap to help getting the minimum sum for each iteration
+	var minSumHeap MinSumHeap
+	heap.Init(&minSumHeap)
 
-	var sumHeap SumHeap
-	heap.Init(&sumHeap)
-
+	// push the sum of every element of list1 with the first element of list2
 	for i := 0; i < len(list1); i++ {
-		heap.Push(&sumHeap, Sum{sum: list1[i] + list2[0], left: i, right: 0})
+		heap.Push(&minSumHeap, Sum{sum: list1[i] + list2[0], left: i, right: 0})
 	}
 
-	counter := 0
-	for !sumHeap.Empty() && counter < k {
-		smallest := heap.Pop(&sumHeap).(Sum)
+	// init result and counter
+	var result [][]int
+	var counter int
+
+	// keep the for loop as long as the heap is not empty and the counter still smaller than k
+	for !minSumHeap.Empty() && counter < k {
+		// pop the smallest sum from minSumHeap
+		smallest := heap.Pop(&minSumHeap).(Sum)
 		left, right := smallest.left, smallest.right
 
+		// add the smallest pair to result and add the counter
 		result = append(result, []int{list1[left], list2[right]})
+		counter++
 
+		// for the popped pair, push the sum of left elementh of list1 and right+1 elementh of list2, if right+1 still less than length list2
 		nextRight := right + 1
 		if nextRight < len(list2) {
-			heap.Push(&sumHeap, Sum{sum: list1[left] + list2[nextRight], left: left, right: nextRight})
+			heap.Push(&minSumHeap, Sum{sum: list1[left] + list2[nextRight], left: left, right: nextRight})
 		}
-
-		counter++
 	}
 
 	return result
@@ -62,41 +69,41 @@ type Sum struct {
 	right int
 }
 
-// struct SumHeap initialization
-type SumHeap []Sum
+// struct MinSumHeap initialization
+type MinSumHeap []Sum
 
 // Len returns the length of the heap
-func (h SumHeap) Len() int {
+func (h MinSumHeap) Len() int {
 	return len(h)
 }
 
 // Empty returns true if the heap is empty
-func (h SumHeap) Empty() bool {
+func (h MinSumHeap) Empty() bool {
 	return len(h) == 0
 }
 
 // Less returns true if the element with index i should sort before the element with index j
-func (h SumHeap) Less(i, j int) bool {
+func (h MinSumHeap) Less(i, j int) bool {
 	return h[i].sum < h[j].sum || (h[i].sum == h[j].sum && h[i].left < h[j].left)
 }
 
 // Swap swaps the elements with indexes i and j
-func (h SumHeap) Swap(i, j int) {
+func (h MinSumHeap) Swap(i, j int) {
 	h[i], h[j] = h[j], h[i]
 }
 
 // Top show the fastest end time
-func (h SumHeap) Top() interface{} {
+func (h MinSumHeap) Top() interface{} {
 	return h[0]
 }
 
 // Push pushes an element into the UsageHeap
-func (h *SumHeap) Push(x interface{}) {
+func (h *MinSumHeap) Push(x interface{}) {
 	*h = append(*h, x.(Sum))
 }
 
 // Pop pops the element at the top of the UsageHeap
-func (h *SumHeap) Pop() interface{} {
+func (h *MinSumHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
