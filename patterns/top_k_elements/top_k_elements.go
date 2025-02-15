@@ -58,18 +58,23 @@ func FindKthLargest(nums []int, k int) int {
 	var minHeap structs.MinHeap
 	heap.Init(&minHeap)
 
-	// populate the heap
-	for _, num := range nums {
-		heap.Push(&minHeap, num)
-		// if heap has length more than k, then pop the smallest number (top of heap)
-		if minHeap.Len() > k {
+	// populate the heap with k-first elements
+	for i := 0; i < k; i++ {
+		heap.Push(&minHeap, nums[i])
+	}
+
+	// at this point since the heap already has k element
+	for i := k; i < len(nums); i++ {
+		// every element that got pushed to the heap must have value larger than the top of the heap
+		if nums[i] > minHeap.Top() {
+			// we must popped the top, before push the current element to maintain heap with size of k
 			heap.Pop(&minHeap)
+			heap.Push(&minHeap, nums[i])
 		}
 	}
 
 	// the k-th largest element will be the top of the heap after the for loop
-	result := heap.Pop(&minHeap).(int)
-	return result
+	return minHeap.Top()
 }
 
 // struct Frequency initialization
