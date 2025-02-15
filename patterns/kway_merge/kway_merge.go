@@ -62,6 +62,44 @@ func FindKSmallestPairs(list1 []int, list2 []int, k int) [][]int {
 	return result
 }
 
+// KthSmallestElement returns the k-th smallest element from a matrix
+func KthSmallestElement(matrix [][]int, k int) int {
+	// init the cell min heap to help getting the minimum cell for each iteration
+	var cellMinHeap CellMinHeap
+	heap.Init(&cellMinHeap)
+
+	// push the value of matrix for each row with column 0
+	for i := 0; i < len(matrix); i++ {
+		heap.Push(&cellMinHeap, Cell{value: matrix[i][0], row: i, column: 0})
+	}
+
+	// init the min element and counter
+	smallestElement := 0
+	counter := 0
+	for {
+		// pop the smallest cell from the heap
+		smallestCell := heap.Pop(&cellMinHeap).(Cell)
+		rowIndex, columnIndex := smallestCell.row, smallestCell.column
+
+		// add counter to mark the popped element position after sorted
+		counter++
+
+		// for the popped cell, push the value of matrix with row rowIndex and column nextColumn [columnIndex + 1]
+		nextColumn := columnIndex + 1
+		if nextColumn < len(matrix[0]) {
+			heap.Push(&cellMinHeap, Cell{value: matrix[rowIndex][nextColumn], row: rowIndex, column: nextColumn})
+		}
+
+		// if counter equal k then set the smallest element and break the for loop
+		if counter == k {
+			smallestElement = smallestCell.value
+			break
+		}
+	}
+
+	return smallestElement
+}
+
 // struct Sum initialization
 type Sum struct {
 	sum   int
@@ -97,13 +135,62 @@ func (h MinSumHeap) Top() interface{} {
 	return h[0]
 }
 
-// Push pushes an element into the UsageHeap
+// Push pushes an element into the MinSumHeap
 func (h *MinSumHeap) Push(x interface{}) {
 	*h = append(*h, x.(Sum))
 }
 
-// Pop pops the element at the top of the UsageHeap
+// Pop pops the element at the top of the MinSumHeap
 func (h *MinSumHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+// struct Cell initialization
+type Cell struct {
+	value  int
+	row    int
+	column int
+}
+
+// struct CellMinHeap initialization
+type CellMinHeap []Cell
+
+// Len returns the length of the heap
+func (h CellMinHeap) Len() int {
+	return len(h)
+}
+
+// Empty returns true if the heap is empty
+func (h CellMinHeap) Empty() bool {
+	return len(h) == 0
+}
+
+// Less returns true if the element with index i should sort before the element with index j
+func (h CellMinHeap) Less(i, j int) bool {
+	return h[i].value < h[j].value
+}
+
+// Swap swaps the elements with indexes i and j
+func (h CellMinHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+// Top show the fastest end time
+func (h CellMinHeap) Top() interface{} {
+	return h[0]
+}
+
+// Push pushes an element into the CellMinHeap
+func (h *CellMinHeap) Push(x interface{}) {
+	*h = append(*h, x.(Cell))
+}
+
+// Pop pops the element at the top of the CellMinHeap
+func (h *CellMinHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
