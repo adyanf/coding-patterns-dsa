@@ -30,19 +30,12 @@ func TopKFrequent(nums []int, k int) []int {
 	var topFrequencyHeap FrequencyMinHeap
 	heap.Init(&topFrequencyHeap)
 
-	// for each element check if it should be push to top frequency heap
+	// populate the heap with number frequencies
 	for key, value := range frequencies {
-		if topFrequencyHeap.Len() == k {
-			// if heap length already has k elements, then check if the frequency of current element is larger than frequency of the top of min heap
-			// if larger then pop the top and push the current element
-			// otherwise do nothing
-			if value > topFrequencyHeap.Top().(Frequency).count {
-				heap.Pop(&topFrequencyHeap)
-				heap.Push(&topFrequencyHeap, Frequency{element: key, count: value})
-			}
-		} else {
-			// if heap length less than k, push the current element to heap
-			heap.Push(&topFrequencyHeap, Frequency{element: key, count: value})
+		heap.Push(&topFrequencyHeap, Frequency{element: key, count: value})
+		// if the heap has length more than k, then pop the smallest frequency (top of the heap)
+		if topFrequencyHeap.Len() > k {
+			heap.Pop(&topFrequencyHeap)
 		}
 	}
 
