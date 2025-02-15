@@ -1,5 +1,9 @@
 package kway_merge
 
+import (
+	"container/heap"
+)
+
 // The K-way merge pattern is an essential algorithmic strategy for merging K sorted data structures, such as arrays and linked lists, into a single sorted data structure.
 // This technique is an expansion of the standard merge sort algorithm, which traditionally merges two sorted data structures into one.
 // The K-way merge algorithm works by repeatedly selecting the smallest (or largest, if we’re sorting in descending order) element from among
@@ -22,3 +26,80 @@ package kway_merge
 // Use this pattern when these conditions are fulfilled:
 // - Involves merging sorted arrays or a matrix: The problem involves a collection of sorted arrays or a matrix with rows or columns sorted in a specific order that needs to be merged. This could be the core of the problem or a step toward the solution.
 // - Seeking the k-th smallest/largest across sorted collections: The problem involves identifying the k-th smallest or largest element across multiple sorted arrays or linked lists.
+
+func FindKSmallestPairs(list1 []int, list2 []int, k int) [][]int {
+	var result [][]int
+
+	var sumHeap SumHeap
+	heap.Init(&sumHeap)
+
+	for i := 0; i < len(list1); i++ {
+		heap.Push(&sumHeap, Sum{sum: list1[i] + list2[0], left: i, right: 0})
+	}
+
+	counter := 0
+	for !sumHeap.Empty() && counter < k {
+		smallest := heap.Pop(&sumHeap).(Sum)
+		left, right := smallest.left, smallest.right
+
+		result = append(result, []int{list1[left], list2[right]})
+
+		nextRight := right + 1
+		if nextRight < len(list2) {
+			heap.Push(&sumHeap, Sum{sum: list1[left] + list2[nextRight], left: left, right: nextRight})
+		}
+
+		counter++
+	}
+
+	return result
+}
+
+// struct Sum initialization
+type Sum struct {
+	sum   int
+	left  int
+	right int
+}
+
+// struct SumHeap initialization
+type SumHeap []Sum
+
+// Len returns the length of the heap
+func (h SumHeap) Len() int {
+	return len(h)
+}
+
+// Empty returns true if the heap is empty
+func (h SumHeap) Empty() bool {
+	return len(h) == 0
+}
+
+// Less returns true if the element with index i should sort before the element with index j
+func (h SumHeap) Less(i, j int) bool {
+	return h[i].sum < h[j].sum || (h[i].sum == h[j].sum && h[i].left < h[j].left)
+}
+
+// Swap swaps the elements with indexes i and j
+func (h SumHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+// Top show the fastest end time
+func (h SumHeap) Top() interface{} {
+	return h[0]
+}
+
+// Push pushes an element into the UsageHeap
+func (h *SumHeap) Push(x interface{}) {
+	*h = append(*h, x.(Sum))
+}
+
+// Pop pops the element at the top of the UsageHeap
+func (h *SumHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
