@@ -65,3 +65,52 @@ func TestTopKFrequent(t *testing.T) {
 		})
 	}
 }
+
+func TestFindKthLargest(t *testing.T) {
+	tests := []struct {
+		name     string
+		nums     []int
+		k        int
+		expected int
+	}{
+		{
+			name:     "Case 1",
+			nums:     []int{5, 2, 9, -3, 7},
+			k:        1,
+			expected: 9,
+		},
+		{
+			name:     "Case 2",
+			nums:     []int{5, 2, 9, -3, 7},
+			k:        5,
+			expected: -3,
+		},
+		{
+			name:     "Case 3",
+			nums:     []int{10, -5, 0, -8, 4},
+			k:        3,
+			expected: 0,
+		},
+		{
+			name:     "Case 4",
+			nums:     []int{10000, -10000, 5000, 8000, -9000},
+			k:        4,
+			expected: -9000,
+		},
+		{
+			name:     "Case 5",
+			nums:     []int{3, 1, 2},
+			k:        2,
+			expected: 2,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := top_k_elements.FindKthLargest(test.nums, test.k)
+			if got != test.expected {
+				t.Errorf("FindKthLargest(%v, %d) = %d, want %d", test.nums, test.k, got, test.expected)
+			}
+		})
+	}
+}

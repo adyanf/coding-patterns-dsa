@@ -1,6 +1,10 @@
 package top_k_elements
 
-import "container/heap"
+import (
+	"container/heap"
+
+	"github.com/adyanf/coding-patterns-dsa/structs"
+)
 
 // The top k elements pattern is an important technique in coding that helps us efficiently find a specific number of elements, known as k, from a set of data.
 // This is particularly useful when we’re tasked with identifying the largest, smallest, or most/least frequent elements within an unsorted collection.
@@ -45,6 +49,26 @@ func TopKFrequent(nums []int, k int) []int {
 		popped := heap.Pop(&topFrequencyHeap).(Frequency)
 		result = append(result, popped.element)
 	}
+	return result
+}
+
+// FindKthLargest returns the k-th largest number from unsorted nums
+func FindKthLargest(nums []int, k int) int {
+	// init min heap to store sorted numbers ascending
+	var minHeap structs.MinHeap
+	heap.Init(&minHeap)
+
+	// populate the heap
+	for _, num := range nums {
+		heap.Push(&minHeap, num)
+		// if heap has length more than k, then pop the smallest number (top of heap)
+		if minHeap.Len() > k {
+			heap.Pop(&minHeap)
+		}
+	}
+
+	// the k-th largest element will be the top of the heap after the for loop
+	result := heap.Pop(&minHeap).(int)
 	return result
 }
 
