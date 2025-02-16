@@ -114,3 +114,46 @@ func TestFindKthLargest(t *testing.T) {
 		})
 	}
 }
+
+func TestReorganizeString(t *testing.T) {
+	tests := []struct {
+		name     string
+		str      string
+		expected string
+	}{
+		{
+			name:     "Case 1",
+			str:      "abb",
+			expected: "bab",
+		},
+		{
+			name:     "Case 2",
+			str:      "aaaaabbbbbbb",
+			expected: "",
+		},
+		{
+			name:     "Case 3",
+			str:      "jjjjj",
+			expected: "",
+		},
+		{
+			name:     "Case 4",
+			str:      "aaabc",
+			expected: "abaca",
+		},
+		{
+			name:     "Case 5",
+			str:      "fofjjb",
+			expected: "fjbfjo",
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := top_k_elements.ReorganizeString(test.str)
+			if got != test.expected {
+				t.Errorf("ReorganizeString(%s) = %s, want %s", test.str, got, test.expected)
+			}
+		})
+	}
+}

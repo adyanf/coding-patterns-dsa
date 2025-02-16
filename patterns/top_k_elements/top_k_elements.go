@@ -31,22 +31,22 @@ func TopKFrequent(nums []int, k int) []int {
 	}
 
 	// init frequency min heap
-	var topFrequencyHeap FrequencyMinHeap
-	heap.Init(&topFrequencyHeap)
+	var frequencyMinHeap FrequencyMinHeap
+	heap.Init(&frequencyMinHeap)
 
 	// populate the heap with number frequencies
 	for key, value := range frequencies {
-		heap.Push(&topFrequencyHeap, Frequency{element: key, count: value})
+		heap.Push(&frequencyMinHeap, Frequency{element: key, count: value})
 		// if the heap has length more than k, then pop the smallest frequency (top of the heap)
-		if topFrequencyHeap.Len() > k {
-			heap.Pop(&topFrequencyHeap)
+		if frequencyMinHeap.Len() > k {
+			heap.Pop(&frequencyMinHeap)
 		}
 	}
 
-	// populate the result from the top frequency heap
+	// populate the result from the frequency min heap
 	result := make([]int, 0, k)
-	for !topFrequencyHeap.Empty() {
-		popped := heap.Pop(&topFrequencyHeap).(Frequency)
+	for !frequencyMinHeap.Empty() {
+		popped := heap.Pop(&frequencyMinHeap).(Frequency)
 		result = append(result, popped.element)
 	}
 	return result
@@ -75,6 +75,56 @@ func FindKthLargest(nums []int, k int) int {
 
 	// the k-th largest element will be the top of the heap after the for loop
 	return minHeap.Top()
+}
+
+// ReorganizeString returns a string that has no identical adjacent characters if possible or return empty string
+func ReorganizeString(str string) string {
+	// calculate the frequency of each element
+	frequencies := make(map[rune]int)
+	for _, ch := range str {
+		frequencies[ch] = frequencies[ch] + 1
+	}
+
+	// init frequency max heap
+	var frequencyMaxHeap FrequencyMaxHeap
+	heap.Init(&frequencyMaxHeap)
+
+	// populate the max heap with number frequencies sorted with the largest frequency in the root
+	for key, value := range frequencies {
+		heap.Push(&frequencyMaxHeap, Frequency{element: int(key), count: value})
+	}
+
+	// init result and the previous character
+	result := ""
+	previous := Frequency{}
+
+	// keep iterate as long as the max heap is not empty or we still has previous frequency that hasn't been re-push to the max heap
+	for !frequencyMaxHeap.Empty() || (previous.count != 0 && rune(previous.element) != 0) {
+		// if we have previous frequency but the max heap already empty, then it's not possible to reorganize string without identical adjacent characters
+		if (previous.count != 0 && rune(previous.element) != 0) && frequencyMaxHeap.Empty() {
+			return ""
+		}
+
+		// pop element from the top of max heap, add the element char to result, and reduce the count
+		poppedElement := heap.Pop(&frequencyMaxHeap).(Frequency)
+		count, char := poppedElement.count, rune(poppedElement.element)
+		result += string(char)
+		count -= 1
+
+		// if previous element has count > 0, then push it back to max heap, and reset previous frequency
+		if previous.count != 0 && rune(previous.element) != 0 {
+			heap.Push(&frequencyMaxHeap, previous)
+			previous = Frequency{}
+		}
+
+		// if current element has count > 0, then set it as previous frequency
+		if count != 0 {
+			previous.count = count
+			previous.element = int(char)
+		}
+	}
+
+	return result
 }
 
 // struct Frequency initialization
@@ -118,6 +168,48 @@ func (h *FrequencyMinHeap) Push(x interface{}) {
 
 // Pop pops the element at the top of the FrequencyMinHeap
 func (h *FrequencyMinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[0 : n-1]
+	return x
+}
+
+// struct FrequencyMinHeap initialization
+type FrequencyMaxHeap []Frequency
+
+// Len returns the length of the heap
+func (h FrequencyMaxHeap) Len() int {
+	return len(h)
+}
+
+// Empty returns true if the heap is empty
+func (h FrequencyMaxHeap) Empty() bool {
+	return len(h) == 0
+}
+
+// Less returns true if the element with index i should sort before the element with index j
+func (h FrequencyMaxHeap) Less(i, j int) bool {
+	return h[i].count > h[j].count || (h[i].count == h[j].count && h[i].element < h[j].element)
+}
+
+// Swap swaps the elements with indexes i and j
+func (h FrequencyMaxHeap) Swap(i, j int) {
+	h[i], h[j] = h[j], h[i]
+}
+
+// Top show the fastest end time
+func (h FrequencyMaxHeap) Top() interface{} {
+	return h[0]
+}
+
+// Push pushes an element into the FrequencyMaxHeap
+func (h *FrequencyMaxHeap) Push(x interface{}) {
+	*h = append(*h, x.(Frequency))
+}
+
+// Pop pops the element at the top of the FrequencyMaxHeap
+func (h *FrequencyMaxHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
