@@ -107,8 +107,9 @@ func FindClosestElement(nums []int, k int, target int) []int {
 		closest = start
 	}
 
-	// set the window left and right pointers based on the closest index
+	// set the window left based on closest index
 	windowLeft := closest - 1
+	// set the window right based on window left + 1
 	windowRight := windowLeft + 1
 	// iterate as long as the windows size is less than k
 	for (windowRight - windowLeft - 1) < k {
