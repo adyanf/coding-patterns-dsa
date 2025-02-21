@@ -1,5 +1,7 @@
 package modified_binary_search
 
+import "math"
+
 // The modified binary search pattern is an extension of the traditional binary search algorithm and can be applied to a wide range of problems.
 // Before we delve into the modified version, let’s first recap the classic binary search algorithm.
 // Binary search is an efficient search algorithm for searching a target value in sorted arrays or sorted lists that support direct addressing
@@ -58,4 +60,74 @@ func SingleNonDuplicate(nums []int) int {
 
 	// return the nums[start] because the start will point to non duplicate element
 	return nums[start]
+}
+
+// FindClosestElement returns k elements closest to target, including target if found.
+func FindClosestElement(nums []int, k int, target int) []int {
+	// if the length of nums is equal to k return nums, because the target is irrelevant
+	if len(nums) == k {
+		return nums
+	}
+
+	// if the target is less than or equal to the first element of nums
+	// then return the first k elements of nums
+	if target <= nums[0] {
+		return nums[:k]
+	}
+
+	// if the target is greater than or equal to the last element of nums
+	// then return the last k elements of nums
+	if target >= nums[len(nums)-1] {
+		return nums[len(nums)-k:]
+	}
+
+	// init the start and end pointers based on nums
+	start, end := 0, len(nums)-1
+
+	// find the index of the target or the closest element to target
+	var closest int
+	// iterate as long as the start pointer < end pointer
+	for start <= end {
+		closest = start + (end-start)/2
+
+		// break if the target index already found
+		if nums[closest] == target {
+			break
+		}
+
+		// otherwise, move the start pointer or end pointer to the closest
+		if nums[closest] < target {
+			start = closest + 1
+		} else {
+			end = closest - 1
+		}
+	}
+	// if start > end, then closest is the index where the target should be inserted
+	if start > end {
+		closest = start
+	}
+
+	// set the window left and right pointers based on the closest index
+	windowLeft := closest - 1
+	windowRight := windowLeft + 1
+	// iterate as long as the windows size is less than k
+	for (windowRight - windowLeft - 1) < k {
+		// if window left already less than 0, then increment window right
+		if windowLeft < 0 {
+			windowRight++
+			continue
+		}
+
+		// if window right already length of nums then decrement window Left
+		// if |nums[windowLeft]-target| <= |nums[windowRight]-target|, then decrement window left
+		// otherwise, increment window right
+		if windowRight == len(nums) || math.Abs(float64(nums[windowLeft]-target)) <= math.Abs(float64(nums[windowRight]-target)) {
+			windowLeft--
+		} else {
+			windowRight++
+		}
+	}
+
+	// return the window slice of nums
+	return nums[windowLeft+1 : windowRight]
 }
