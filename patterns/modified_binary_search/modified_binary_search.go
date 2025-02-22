@@ -135,37 +135,7 @@ func FindClosestElement(nums []int, k int, target int) []int {
 
 // BinarySearchRotated search a target in array nums, which might be rotated
 func BinarySearchRotated(nums []int, target int) int {
-	start, end := 0, len(nums)-1
-	for start <= end {
-		mid := start + (end-start)/2
-
-		if nums[mid] == target {
-			return mid
-		}
-
-		if target >= nums[start] {
-			if target < nums[mid] {
-				end = mid - 1
-			} else {
-				if nums[mid] >= nums[start] {
-					start = mid + 1
-				} else {
-					end = mid - 1
-				}
-			}
-		} else {
-			if target < nums[mid] {
-				if nums[mid] >= nums[start] {
-					start = mid + 1
-				} else {
-					end = mid - 1
-				}
-			} else {
-				start = mid + 1
-			}
-		}
-	}
-	return -1
+	return binarySearchParametered(nums, 0, len(nums)-1, target)
 }
 
 // binarySearchParametered search a target in an array but limited by the start and the end indexes
