@@ -132,3 +132,75 @@ func FindClosestElement(nums []int, k int, target int) []int {
 	// return the window slice of nums
 	return nums[windowLeft+1 : windowRight]
 }
+
+// BinarySearchRotated search a target in array nums, which might be rotated
+func BinarySearchRotated(nums []int, target int) int {
+	start, end := 0, len(nums)-1
+	for start <= end {
+		mid := start + (end-start)/2
+
+		if nums[mid] == target {
+			return mid
+		}
+
+		if target >= nums[start] {
+			if target < nums[mid] {
+				end = mid - 1
+			} else {
+				if nums[mid] >= nums[start] {
+					start = mid + 1
+				} else {
+					end = mid - 1
+				}
+			}
+		} else {
+			if target < nums[mid] {
+				if nums[mid] >= nums[start] {
+					start = mid + 1
+				} else {
+					end = mid - 1
+				}
+			} else {
+				start = mid + 1
+			}
+		}
+	}
+	return -1
+}
+
+// binarySearchParametered search a target in an array but limited by the start and the end indexes
+// in this example the array might be rotated
+func binarySearchParametered(nums []int, start int, end int, target int) int {
+	// base case for recursive function, if start > end then we didn't found the target
+	if start > end {
+		return -1
+	}
+
+	// calculate the mid index based on the search parameter
+	mid := start + (end-start)/2
+
+	// if the mid index contain the target return the index immediately
+	if nums[mid] == target {
+		return mid
+	}
+
+	// if the array is sorted from start index to mid index
+	// check if the target is less than mid index and larger or equal to start index
+	// 	- if yes, then search the first half of the search parameter
+	// 	- if no, then search the latter half of the search parameter
+	if nums[start] <= nums[mid] {
+		if target < nums[mid] && target >= nums[start] {
+			return binarySearchParametered(nums, start, mid-1, target)
+		}
+		return binarySearchParametered(nums, mid+1, end, target)
+	}
+
+	// here, the array is rotated (not sorted) in between start index to mid index
+	// check if the target is larger than mid index and less or equal to end index
+	// 	- if yes, then search the latter half of the search parameter
+	// 	- if no, then search the first half of the search parameter
+	if nums[mid] < target && target <= nums[end] {
+		return binarySearchParametered(nums, mid+1, end, target)
+	}
+	return binarySearchParametered(nums, start, mid-1, target)
+}

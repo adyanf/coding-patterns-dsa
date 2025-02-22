@@ -114,3 +114,52 @@ func TestFindClosestElements(t *testing.T) {
 		})
 	}
 }
+
+func TestBinarySearchRotated(t *testing.T) {
+	tests := []struct {
+		name     string
+		nums     []int
+		target   int
+		expected int
+	}{
+		{
+			name:     "Case 1",
+			nums:     []int{6, 7, 1, 2, 3, 4, 5},
+			target:   3,
+			expected: 4,
+		},
+		{
+			name:     "Case 2",
+			nums:     []int{6, 7, 1, 2, 3, 4, 5},
+			target:   6,
+			expected: 0,
+		},
+		{
+			name:     "Case 3",
+			nums:     []int{4, 5, 6, 1, 2, 3},
+			target:   3,
+			expected: 5,
+		},
+		{
+			name:     "Case 4",
+			nums:     []int{4, 5, 6, 1, 2, 3},
+			target:   6,
+			expected: 2,
+		},
+		{
+			name:     "Case 5",
+			nums:     []int{4},
+			target:   1,
+			expected: -1,
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			got := modified_binary_search.BinarySearchRotated(test.nums, test.target)
+			if got != test.expected {
+				t.Errorf("BinarySearchRotated(%v,%d) = %d, want %d", test.nums, test.target, got, test.expected)
+			}
+		})
+	}
+}
