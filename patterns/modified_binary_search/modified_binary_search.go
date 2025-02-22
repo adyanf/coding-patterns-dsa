@@ -135,36 +135,42 @@ func FindClosestElement(nums []int, k int, target int) []int {
 
 // RotatedBinarySearchIterative search a target in array nums, which might be rotated, with iterative style
 func RotatedBinarySearchIterative(nums []int, target int) int {
+	// init search parameter
 	start, end := 0, len(nums)-1
+	// keep iterating as long as start index is less than or equal end index
 	for start <= end {
+		// calculate the mid index based on the search parameter
 		mid := start + (end-start)/2
-
+		// if the mid index contain the target return the index immediately
 		if nums[mid] == target {
 			return mid
 		}
 
-		if target >= nums[start] {
-			if target < nums[mid] {
+		// if the array is sorted from start index to mid index
+		// check if the target is less than mid index and larger or equal to start index
+		// 	- if yes, then search the first half of the search parameter by end = mid - 1
+		// 	- if no, then search the latter half of the search parameter by start = mid + 1
+		if nums[start] <= nums[mid] {
+			if nums[start] <= target && target < nums[mid] {
 				end = mid - 1
-			} else {
-				if nums[mid] >= nums[start] {
-					start = mid + 1
-				} else {
-					end = mid - 1
-				}
-			}
-		} else {
-			if target < nums[mid] {
-				if nums[mid] >= nums[start] {
-					start = mid + 1
-				} else {
-					end = mid - 1
-				}
 			} else {
 				start = mid + 1
 			}
+			continue
+		}
+
+		// here, array is sorted from mid index to end index
+		// check if the target is larger than mid index and less or equal to end index
+		// 	- if yes, then search the latter half of the search parameter by start = mid + 1
+		// 	- if no, then search the first half of the search parameter by end = mid - 1
+		if nums[mid] < target && target <= nums[end] {
+			start = mid + 1
+		} else {
+			end = mid - 1
 		}
 	}
+
+	// if the for loop break, then we didn't found the target
 	return -1
 }
 
