@@ -18,6 +18,10 @@ import (
 // 3. Dynamic pointer movement: Both pointers move independently of each other according to certain conditions or criteria.
 //    In addition, both pointers might move along the same or two different data structures.
 
+// FindSumOfThree checks if any three integers in the array sum up to the target integer.
+// Returns true if a valid trio is found, otherwise false.
+// Uses a two-pointer technique to find the valid trio with a time complexity of O(n^2) and space complexity of O(1).
+// The sort array operation was ignored in complexity calculation.
 func FindSumOfThree(nums []int, target int) bool {
 	sort.Ints(nums)
 	for i := 0; i < len(nums)-2; i++ {
@@ -37,6 +41,9 @@ func FindSumOfThree(nums []int, target int) bool {
 	return false
 }
 
+// RemoveNthLastNode removes the nth last node from a linked list and returns the modified list head.
+// The input `head` is the starting node of the linked list, and `n` represents the position from the end to remove.
+// Uses a two-pointer technique to identify and remove the target node efficiently with a time complexity of O(n) and space complexity of O(1).
 func RemoveNthLastNode(head *structs.LinkedListNode, n int) *structs.LinkedListNode {
 	left := head
 	right := head
@@ -59,6 +66,9 @@ func RemoveNthLastNode(head *structs.LinkedListNode, n int) *structs.LinkedListN
 	return head
 }
 
+// SortColors sorts an array of integers representing colors (0, 1, and 2) in-place in ascending order.
+// The input array is modified directly and returned.
+// Uses a two-pointer approach for efficient sorting with a time complexity of O(n) and space complexity of O(1).
 func SortColors(colors []int) []int {
 	left := 0
 	right := len(colors) - 1
